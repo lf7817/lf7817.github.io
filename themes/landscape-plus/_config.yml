@@ -1,7 +1,8 @@
 # Header
 menu:
-  Home: /
-  Archives: /archives
+  主页: /
+  目录: /archives
+  关于我: /about
 rss: /atom.xml
 
 # Content
