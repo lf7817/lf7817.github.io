@@ -96,19 +96,21 @@
       
         <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>有一需求，点击一按钮出来选择框，选择上传图片类型，选择玩类型后弹出系统文件选择框，根据需求自然而然想到了js模拟点击事件。很简单直接调用<code>fileInput.click()就可以？？？</code></p>
 <h2 id="事故现场"><a href="#事故现场" class="headerlink" title="事故现场"></a>事故现场</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// jsx</span></div><div class="line">&lt;input </div><div class="line">  style=&#123;&#123;<span class="attr">display</span>: <span class="string">'none'</span>&#125;&#125;  </div><div class="line">  ref=&#123;i =&gt; <span class="keyword">this</span>.fileIput = i&#125; </div><div class="line">  type=<span class="string">"file"</span>  </div><div class="line">  onChange=&#123;<span class="keyword">this</span>.onChange&#125; /&gt;</div><div class="line"></div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">this</span>.ref.fileInput.click()</div></pre></td></tr></table></figure>
-<p>调用<code>this.ref.fileInput.click()</code>并没有出现想要的效果（chrome 手机模式下）.<br>试了下手机端<br>Android :smile:<br>IOS :sob: </p>
+<p>调用<code>this.ref.fileInput.click()</code>并没有出现想要的效果（chrome 手机模式下）.<br>试了下手机端<br>Android 正常<br>IOS 失败<br>神奇的是调用两次<code>this.ref.fileInput.click()</code>，chrome， IOS都正常了，但是android却不正常了弹出两次文件选择框。。。<br>心想是不是<code>fastclick</code>导的鬼，tmd还真是，去掉<code>fastclick</code>都正常了，只需要调用一次<code>this.ref.fileInput.click()</code><br>但是fastclick不能去掉啊，移动端有300ms延迟,查阅了Api后发现官网还真有解决办法，就是让input使用原生事件，具体操作就是给你点击的那个元素（不是input）添加<code>className=”needsclick”</code>即可</p>
+<p>源码如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">  * Determine whether a given element requires a native click.</span></div><div class="line"><span class="comment">  *</span></div><div class="line"><span class="comment">  * @param &#123;EventTarget|Element&#125; target Target DOM element</span></div><div class="line"><span class="comment">  * @returns &#123;boolean&#125; Returns true if the element needs a native click</span></div><div class="line"><span class="comment">  */</span></div><div class="line">FastClick.prototype.needsClick = <span class="function"><span class="keyword">function</span>(<span class="params">target</span>) </span>&#123;</div><div class="line">  <span class="keyword">switch</span> (target.nodeName.toLowerCase()) &#123;</div><div class="line"></div><div class="line">  <span class="comment">// Don't send a synthetic click to disabled inputs (issue #62)</span></div><div class="line">  <span class="keyword">case</span> <span class="string">'button'</span>:</div><div class="line">  <span class="keyword">case</span> <span class="string">'select'</span>:</div><div class="line">  <span class="keyword">case</span> <span class="string">'textarea'</span>:</div><div class="line">    <span class="keyword">if</span> (target.disabled) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">break</span>;</div><div class="line">  <span class="keyword">case</span> <span class="string">'input'</span>:</div><div class="line"></div><div class="line">    <span class="comment">// File inputs need real clicks on iOS 6 due to a browser bug (issue #68)</span></div><div class="line">    <span class="keyword">if</span> ((deviceIsIOS &amp;&amp; target.type === <span class="string">'file'</span>) || target.disabled) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">break</span>;</div><div class="line">  <span class="keyword">case</span> <span class="string">'label'</span>:</div><div class="line">  <span class="keyword">case</span> <span class="string">'iframe'</span>: <span class="comment">// iOS8 homescreen apps can prevent events bubbling into frames</span></div><div class="line">  <span class="keyword">case</span> <span class="string">'video'</span>:</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> (<span class="regexp">/\bneedsclick\b/</span>).test(target.className);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>看完源码发现我的标题得改了。。。(不只是input，不只是click事件)</p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://lf7817.github.io/2018/03/07/引入FastClick后使用js模拟input点击事件失败/" data-id="cjegid9nw0002fkv6z890og84" class="article-share-link" data-share="baidu" data-title="引入FastClick后使用js模拟input点击事件失败">分享到</a>
+        <a data-url="https://lf7817.github.io/2018/03/07/引入FastClick后使用js模拟input点击事件失败/" data-id="cjegj1bpw000410v6dxgwo02q" class="article-share-link" data-share="baidu" data-title="引入FastClick后使用js模拟input点击事件失败">分享到</a>
       
 
       
 
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动端，FastClick/">移动端，FastClick</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动端填坑记，FastClick/">移动端填坑记，FastClick</a></li></ul>
 
     </footer>
   </div>
@@ -153,7 +155,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://lf7817.github.io/2018/01/29/react-router-V4-0-路由跳转/" data-id="cjegid9nz0004fkv6wggacdws" class="article-share-link" data-share="baidu" data-title="react-router V4.0 路由跳转">分享到</a>
+        <a data-url="https://lf7817.github.io/2018/01/29/react-router-V4-0-路由跳转/" data-id="cjegj1bpw000310v6zyestufw" class="article-share-link" data-share="baidu" data-title="react-router V4.0 路由跳转">分享到</a>
       
 
       
@@ -201,7 +203,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://lf7817.github.io/2018/01/22/在create-react-app中启用修饰器/" data-id="cjegid9o10006fkv6utluj60h" class="article-share-link" data-share="baidu" data-title="在create-react-app中启用修饰器">分享到</a>
+        <a data-url="https://lf7817.github.io/2018/01/22/在create-react-app中启用修饰器/" data-id="cjegj1bpw000510v6ry08gw5b" class="article-share-link" data-share="baidu" data-title="在create-react-app中启用修饰器">分享到</a>
       
 
       
@@ -255,7 +257,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://lf7817.github.io/2018/01/15/Python学习之路(一)：基本数据类型/" data-id="cjegid9ns0000fkv6mesi03tg" class="article-share-link" data-share="baidu" data-title="Python学习之路(一)：基本数据类型">分享到</a>
+        <a data-url="https://lf7817.github.io/2018/01/15/Python学习之路(一)：基本数据类型/" data-id="cjegj1bpv000110v6pco42uu7" class="article-share-link" data-share="baidu" data-title="Python学习之路(一)：基本数据类型">分享到</a>
       
 
       
@@ -306,7 +308,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="https://lf7817.github.io/2018/01/10/hello-world/" data-id="cjegid9o00005fkv64py6rtin" class="article-share-link" data-share="baidu" data-title="Hello World">分享到</a>
+        <a data-url="https://lf7817.github.io/2018/01/10/hello-world/" data-id="cjegj1bpr000010v6jt3f3yeu" class="article-share-link" data-share="baidu" data-title="Hello World">分享到</a>
       
 
       
@@ -332,7 +334,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/create-react-app/">create-react-app</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/demo/">demo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobx/">mobx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react-router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动端，FastClick/">移动端，FastClick</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/create-react-app/">create-react-app</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/demo/">demo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobx/">mobx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react-router</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动端填坑记，FastClick/">移动端填坑记，FastClick</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -341,7 +343,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/create-react-app/" style="font-size: 10px;">create-react-app</a> <a href="/tags/demo/" style="font-size: 10px;">demo</a> <a href="/tags/mobx/" style="font-size: 10px;">mobx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react-router</a> <a href="/tags/移动端，FastClick/" style="font-size: 10px;">移动端，FastClick</a>
+      <a href="/tags/create-react-app/" style="font-size: 10px;">create-react-app</a> <a href="/tags/demo/" style="font-size: 10px;">demo</a> <a href="/tags/mobx/" style="font-size: 10px;">mobx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 10px;">react-router</a> <a href="/tags/移动端填坑记，FastClick/" style="font-size: 10px;">移动端填坑记，FastClick</a>
     </div>
   </div>
 
