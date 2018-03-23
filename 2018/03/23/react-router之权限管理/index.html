@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>react-router之权限管理 | fan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在做公司一后台管理项目，需要根据用户身份控制其权限，之前的做法仅仅是根据身份把相应的入口给去掉了，路由没做任何处理，直接在地址栏输入地址就能访问所有页面。。。所以这次要花点功夫处理下（,ԾㅂԾ,,）。本代码参(chao)考(xi)了ant-design-pro">
+<meta name="keywords" content="react-router">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react-router之权限管理">
+<meta property="og:url" content="https://lf7817.github.io/2018/03/23/react-router之权限管理/index.html">
+<meta property="og:site_name" content="fan">
+<meta property="og:description" content="最近在做公司一后台管理项目，需要根据用户身份控制其权限，之前的做法仅仅是根据身份把相应的入口给去掉了，路由没做任何处理，直接在地址栏输入地址就能访问所有页面。。。所以这次要花点功夫处理下（,ԾㅂԾ,,）。本代码参(chao)考(xi)了ant-design-pro">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://lf7817.github.io/2018/03/23/react-router之权限管理/t.gif">
+<meta property="og:updated_time" content="2018-03-23T06:01:02.262Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react-router之权限管理">
+<meta name="twitter:description" content="最近在做公司一后台管理项目，需要根据用户身份控制其权限，之前的做法仅仅是根据身份把相应的入口给去掉了，路由没做任何处理，直接在地址栏输入地址就能访问所有页面。。。所以这次要花点功夫处理下（,ԾㅂԾ,,）。本代码参(chao)考(xi)了ant-design-pro">
+<meta name="twitter:image" content="https://lf7817.github.io/2018/03/23/react-router之权限管理/t.gif">
+  
+    <link rel="alternative" href="/atom.xml" title="fan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+</head>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">fan</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录/学习/成长</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">目录</a>
+        
+          <a class="main-nav-link" href="/about">关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="lf7817.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-react-router之权限管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/23/react-router之权限管理/" class="article-date">
+  <time datetime="2018-03-23T02:39:12.000Z" itemprop="datePublished">2018-03-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      react-router之权限管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>最近在做公司一后台管理项目，需要根据用户身份控制其权限，之前的做法仅仅是根据身份把相应的入口给去掉了，路由没做任何处理，直接在地址栏输入地址就能访问所有页面。。。所以这次要花点功夫处理下（,ԾㅂԾ,,）。本代码参(chao)考(xi)了<a href="https://github.com/ant-design/ant-design-pro/tree/master/src/components/Authorized" target="_blank" rel="external">ant-design-pro</a><br><a id="more"></a></p>
+<h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><p><img src="/2018/03/23/react-router之权限管理/t.gif" alt="预览"></p>
+</blockquote>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><ul>
+<li>登陆成功后，需要设置下权限，进入要主页后还要去读取权限，所以要写个函数去设置/读取权限</li>
+</ul>
+<p><code>./common/authority.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> localStore <span class="keyword">from</span> <span class="string">'./localStore'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">getAuthority</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> localStore.getItem(<span class="string">'authority'</span>) || <span class="string">'azg'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">setAuthority</span>(<span class="params">authority</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> localStore.setItem(<span class="string">'authority'</span>, authority);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>权限管理说白了就是对路由的拦截，当用户访问了他不该访问的路径，我们要给他调到403页面，所以我们要封装下<code>Route</code>组件，当访问了不该访问的路径直接redirect到403页面<br>先看下路由表<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &#123;</div><div class="line">    path: <span class="string">'/install'</span>,</div><div class="line">    component: Install,</div><div class="line">    authority: <span class="string">'azg'</span></div><div class="line">    routes: [</div><div class="line">      &#123;</div><div class="line">        path: <span class="string">'/install/:id'</span>,</div><div class="line">        component: ConfigGood</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    path: <span class="string">'/debug'</span>,</div><div class="line">    component: Debug,</div><div class="line">    authority: [<span class="string">'tsg'</span>, <span class="string">'kf'</span>],</div><div class="line">    routes: [</div><div class="line">      &#123;</div><div class="line">        path: <span class="string">'/debug/:id'</span>,</div><div class="line">        component: DebugGood,</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>大概轮廓如下<code>AuthorizedRoute.jsx</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> AuthorizedRoute = (&#123;</div><div class="line">  component: Component,</div><div class="line">  authority,</div><div class="line">  redirectPath,</div><div class="line">  &#123;...rest&#125;</div><div class="line">&#125;) =&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (authority === currentAuthority) &#123;</div><div class="line">    <span class="keyword">return</span> (</div><div class="line">      &lt;Route</div><div class="line">      &#123;...rest&#125;</div><div class="line">      render=&#123;props =&gt; &lt;Component &#123;...props&#125; /&gt;&#125; /&gt;</div><div class="line">    )</div><div class="line">  &#125; else &#123;</div><div class="line">    return (</div><div class="line">      &lt;Route &#123;...rest&#125; render=&#123;() =&gt;</div><div class="line">        &lt;Redirect to=&#123;redirectPath&#125; /&gt;</div><div class="line">      &#125; /&gt;</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>根据上边的路由表这么写肯定不行，页面可能允许多个角色访问，authority可能是字符串也可能是数组，所以得重新判，都写在一个组建里有点乱，这里把权限判断抽离出来</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 权限检查</span></div><div class="line"><span class="comment"> * @param &#123; String | Array&lt;Sting&gt; &#125; authority 允许访问的权限</span></div><div class="line"><span class="comment"> * @param &#123; String &#125; currentAuthority 用户的权限</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; target 尝试访问的页面</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; Exception 无权访问的页面</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">const</span> checkPermissions = <span class="function">(<span class="params">authority, currentAuthority, target, Exception</span>) =&gt;</span> &#123;</div><div class="line">  <span class="comment">// 没有输入authority默认查看所有</span></div><div class="line">  <span class="keyword">if</span> (!authority) &#123;</div><div class="line">    <span class="keyword">return</span> target</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 如果authority是字符串</span></div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> authority === <span class="string">'string'</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (authority === currentAuthority) &#123;</div><div class="line">      <span class="keyword">return</span> target</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> Exception</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 如果authority是数组</span></div><div class="line">  <span class="keyword">if</span>(<span class="built_in">Array</span>.isArray(authority)) &#123;</div><div class="line">    <span class="keyword">if</span> (authority.indexOf(currentAuthority) &gt;= <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">return</span> target</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> Exception</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'参数authority输入错误'</span>)  </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> check = <span class="function">(<span class="params">authority, target, Exception</span>) =&gt;</span> </div><div class="line">  checkPermissions(authority, CURRENT, target, Exception)</div></pre></td></tr></table></figure>
+<p>再抽象个<code>Authorized</code>组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Authorized = <span class="function">(<span class="params">&#123; children, authority, noMatch = <span class="literal">null</span>&#125;</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> childrenRender = <span class="keyword">typeof</span> children === <span class="string">'undefined'</span> ? <span class="literal">null</span> : children</div><div class="line">  <span class="keyword">return</span> check(authority, childrenRender, noMatch)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再来改改<code>AuthorizedRoute</code>组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> CURRENT = getAuthority()  <span class="comment">// 获取用户权限</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> AuthorizedRoute = (&#123;</div><div class="line">  component: Component,</div><div class="line">  render,</div><div class="line">  authority,</div><div class="line">  redirectPath,</div><div class="line">  ...rest&#125;) =&gt; (</div><div class="line">  &lt;Authorized</div><div class="line">    authority=&#123;authority&#125;</div><div class="line">    noMatch=&#123;</div><div class="line">      &lt;Route &#123;...rest&#125; render=&#123;() =&gt;</div><div class="line">        &lt;Redirect to=&#123;redirectPath&#125; /&gt;</div><div class="line">      &#125; /&gt;</div><div class="line">    &#125;&gt;</div><div class="line">    &lt;Route</div><div class="line">      &#123;...rest&#125;</div><div class="line">      render=&#123;props =&gt; (</div><div class="line">        Component ? &lt;Component &#123;...props&#125; /&gt; :</div><div class="line">          render(props)</div><div class="line">      )&#125; /&gt;</div><div class="line">  &lt;/Authorized&gt;</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>这里加入<code>render props</code>,当提供了<code>component props</code>就用<code>component</code>渲染，否则使用<code>render</code>渲染。路由表中没有<code>authority</code>字段默认所有人都可以访问</p>
+<p>怎么调用<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> RouteWithSubRoutes = <span class="function">(<span class="params">route</span>) =&gt;</span> (</div><div class="line">  &lt;AuthorizedRoute path=&#123;route.path&#125; authority=&#123;route.authority&#125; render=&#123;props =&gt; (</div><div class="line">    &lt;route.component &#123;...props&#125; routes=&#123;route.routes&#125;/&gt;</div><div class="line">  )&#125;/&gt;</div><div class="line">)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> RouterTransition = <span class="function">(<span class="params">&#123; location, animateClass, routes &#125;</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> (</div><div class="line">    &lt;Route render=&#123;() =&gt; (</div><div class="line">      routes.map(<span class="function"><span class="params">route</span> =&gt;</span> (</div><div class="line">        &lt;RouteWithSubRoutes key=&#123;route.path&#125; &#123;...route&#125;/&gt;</div><div class="line">      ))</div><div class="line">    )&#125; /&gt;</div><div class="line">  )</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>有子路由的再调用<code>RouteWithSubRoutes</code>渲染就行</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这样就实现了路由权限配置化，在路由表中设置好权限就行</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://lf7817.github.io/2018/03/23/react-router之权限管理/" data-id="cjf3c7mcr00041sv68dp54fx7" class="article-share-link" data-share="baidu" data-title="react-router之权限管理">分享到</a>
+      
+
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-router/">react-router</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/07/引入FastClick后使用js模拟input点击事件失败/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">引入FastClick后使用js模拟input点击事件失败</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/create-react-app/">create-react-app</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/demo/">demo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fastclick/">fastclick</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mobx/">mobx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-router/">react-router</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动端填坑记/">移动端填坑记</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/create-react-app/" style="font-size: 10px;">create-react-app</a> <a href="/tags/demo/" style="font-size: 10px;">demo</a> <a href="/tags/fastclick/" style="font-size: 10px;">fastclick</a> <a href="/tags/mobx/" style="font-size: 10px;">mobx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-router/" style="font-size: 20px;">react-router</a> <a href="/tags/移动端填坑记/" style="font-size: 10px;">移动端填坑记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/23/react-router之权限管理/">react-router之权限管理</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/07/引入FastClick后使用js模拟input点击事件失败/">引入FastClick后使用js模拟input点击事件失败</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/29/react-router-V4-0-路由跳转/">react-router V4.0 路由跳转</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/22/在create-react-app中启用修饰器/">在create-react-app中启用修饰器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/15/Python学习之路(一)：基本数据类型/">Python学习之路(一)：基本数据类型</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="http://arvinxiang.com" target="_blank">主题作者</a>
+          </li>
+        
+          <li>
+            <a href="http://reqianduan.com" target="_blank">热前端</a>
+          </li>
+        
+          <li>
+            <a href="http://yuancheng.work" target="_blank">远程.work</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 lf7817<br>
+      Powered by <a href="//hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">目录</a>
+  
+    <a href="/about" class="mobile-nav-link">关于我</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>
